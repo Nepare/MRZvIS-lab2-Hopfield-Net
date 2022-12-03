@@ -55,6 +55,12 @@ class HopfieldNetwork:
             if not asynch_mode:
                 next_state = multiplied_matrix
 
+                for activating_index in range(len(next_state)):
+                    if next_state[activating_index][0] >= 0:
+                        next_state[activating_index][0] = 1
+                    else:
+                        next_state[activating_index][0] = -1
+
             # =-=-=-=                  =-=-=-=
 
             # =-=-=-= асинхронный режим =-=-=-=
@@ -67,17 +73,12 @@ class HopfieldNetwork:
                 current_random_neuron = self.shuffled_neurons[cycle]
                 next_state[current_random_neuron][0] = multiplied_matrix[current_random_neuron][0]
 
-            # =-=-=-=                   =-=-=-=
-
-            for activating_index in range(len(next_state)):
-                if next_state[activating_index][0] >= 0:
-                    next_state[activating_index][0] = 1
+                if next_state[current_random_neuron][0] >= 0:
+                    next_state[current_random_neuron][0] = 1
                 else:
-                    next_state[activating_index][0] = -1
+                    next_state[current_random_neuron][0] = -1
 
-            # для синхронного и асинхронного режима эта часть кода одна и та же, потому что для асинхронного
-            # режима, где мы изменяем только один нейрон, остальные нейроны останутся такими же, как и были
-            # (-1 останется -1, потому что <0; 1 останется 1, потому что >0)
+            # =-=-=-=                   =-=-=-=
 
             np_dist_model = next_state
             print(print_model(next_state.T.flatten().tolist()) + "\n")
